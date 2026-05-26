@@ -93,11 +93,35 @@
       text-align: center;
     }
 
-    /* PRINT */
+    /* ===== MOBILE ===== */
+    @media screen and (max-width: 768px) {
+
+      .container {
+        width: 100vw;
+        height: auto;
+      }
+
+      #preview {
+        overflow-x: auto;
+      }
+
+      body {
+        min-width: 100vh;
+      }
+    }
+
+    /* ===== PRINT ===== */
     @media print {
+
+      html, body {
+        width: 297mm;
+        height: 210mm;
+      }
+
       body {
         visibility: hidden;
         margin: 0;
+        padding: 0;
       }
 
       #preview {
@@ -107,12 +131,18 @@
         left: 0;
         width: 100%;
       }
+
+      .container {
+        width: 297mm;
+        height: 210mm;
+      }
     }
 
     @page {
       size: A4 landscape;
       margin: 0;
     }
+
   </style>
 </head>
 
