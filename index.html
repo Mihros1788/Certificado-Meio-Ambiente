@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -6,6 +6,9 @@
 
   <!-- Fonte -->
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,700&display=swap" rel="stylesheet">
+
+  <!-- html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     body {
@@ -65,7 +68,7 @@
       display: none;
     }
 
-    /* ===== CERTIFICADO RESPONSIVO ===== */
+    /* ===== CERTIFICADO ===== */
     .container {
       position: relative;
       width: 100%;
@@ -91,58 +94,23 @@
       color: #000;
       width: 80%;
       text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      word-break: break-word;
     }
 
-    /* ===== MOBILE ===== */
+    /* MOBILE */
     @media screen and (max-width: 768px) {
-
       .container {
-        width: 100vw;
-        height: auto;
-      }
-
-      #preview {
-        overflow-x: auto;
+        width: 95vw;
+        transform: scale(0.95);
+        transform-origin: top center;
       }
 
       body {
-        min-width: 100vh;
+        min-width: 100%;
       }
     }
-
-    /* ===== PRINT ===== */
-    @media print {
-
-      html, body {
-        width: 297mm;
-        height: 210mm;
-      }
-
-      body {
-        visibility: hidden;
-        margin: 0;
-        padding: 0;
-      }
-
-      #preview {
-        visibility: visible;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-      }
-
-      .container {
-        width: 297mm;
-        height: 210mm;
-      }
-    }
-
-    @page {
-      size: A4 landscape;
-      margin: 0;
-    }
-
   </style>
 </head>
 
@@ -155,13 +123,12 @@
     <input type="text" id="nome" placeholder="Digite o nome completo" />
 
     <button onclick="gerar()">Gerar Certificado</button>
-    <button id="btnImprimir" onclick="window.print()">Imprimir / Salvar como PDF</button>
+    <button id="btnImprimir" onclick="gerarPNG()">Baixar Certificado (PNG)</button>
   </div>
 
   <div id="preview">
     <div class="container">
       <img src="certificado_base.jpeg" class="certificado" alt="Certificado" />
-
       <div class="nome-dinamico" id="nome-certificado">SEU NOME AQUI</div>
     </div>
   </div>
@@ -175,11 +142,31 @@
         return;
       }
 
-      nome = nome.toUpperCase();
+      document.getElementById('nome-certificado').innerText = nome.toUpperCase();
 
-      document.getElementById('nome-certificado').innerText = nome;
       document.getElementById('preview').style.display = 'block';
       document.getElementById('btnImprimir').style.display = 'inline-block';
+    }
+
+    async function gerarPNG() {
+      const elemento = document.querySelector("#preview");
+
+      if (!elemento) return;
+
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      const canvas = await html2canvas(elemento, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: null
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+
+      const link = document.createElement("a");
+      link.href = imgData;
+      link.download = "certificado.png";
+      link.click();
     }
   </script>
 
